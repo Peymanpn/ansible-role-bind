@@ -63,6 +63,7 @@ The packages `python-netaddr` (required for the [`ipaddr`](https://docs.ansible.
 | `bind_key_mapping`          | []                   | `Primary: Keyname` - mapping of TSIG keys to use for a specific primary                                                              |
 | `bind_zones`                | n/a                  | A list of mappings with zone definitions. See below this table for examples                                                          |
 | `- allow_update`            | `['none']`           | A list of hosts that are allowed to dynamically update this DNS zone.                                                                |
+| `- allow_transfer`          | `[]`                 | A list of hosts that are allowed to transfer (copy) the zone information from the server (master or slave for the zone).
 | `- also_notify`             | -                    | A list of servers that will receive a notification when the primary zone file is reloaded.                                           |
 | `- create_forward_zones`    | -                    | When initialized and set to `false`, creation of forward zones will be skipped (resulting in a reverse only zone)                    |
 | `- create_reverse_zones`    | -                    | When initialized and set to `false`, creation of reverse zones will be skipped (resulting in a forward only zone)                    |
@@ -157,6 +158,9 @@ bind_zones:
     delegate:
       - zone: foo
         dns: 192.0.2.1
+    allow_transfer:   # explicitly allow the AXFR of this zone
+      - 192.168.12.34 
+      - 192.168.34.12
     services:
       - name: _ldap._tcp
         weight: 100
